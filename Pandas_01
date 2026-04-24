@@ -1,0 +1,376 @@
+Primeiros passos com Pandas
+Para instalar o Pandas rode no terminal:
+
+pip install pandas
+
+para importar o pandas:
+
+import pandas as pd
+Os principais objetos Pandas são Series e DataFrames
+
+Series
+Uma Series no Pandas é uma estrutura de dados unidimensional, parecida com uma coluna de uma planilha. Ela armazena uma sequência de valores (como números, textos ou datas) acompanhados de um índice, que identifica cada elemento. Esse índice pode ser automático (0, 1, 2...) ou personalizado. As Series são muito úteis para representar e manipular listas de dados com rótulos, permitindo fazer operações matemáticas, filtragens e análises de forma simples e eficiente.
+
+Os principais métodos de uma Series:
+
+Método	Descrição
+head(n)	Mostra os primeiros n elementos da Series (padrão = 5).
+tail(n)	Mostra os últimos n elementos da Series.
+unique()	Retorna os valores únicos da Series.
+value_counts()	Conta quantas vezes cada valor aparece.
+mean()	Calcula a média dos valores numéricos.
+sum()	Retorna a soma dos valores.
+max() / min()	Retorna o maior ou menor valor.
+sort_values()	Ordena os valores da Series.
+isnull() / notnull()	Verifica se há valores nulos (NaN).
+apply(func)	Aplica uma função personalizada a cada elemento.
+No exemplo abaixo vemos uma lista de 100 notas que foram transformadas em uma Series Pandas. Repare em como cada nota tem um índice quando exibimos o resultado
+
+# Lista com 100 notas inteiras
+notas = [ 1,  0,  6,  3,  6,  4,  4,  9,  5,  2,  4,  3,  9,  9,  9, 10,  9,
+        8,  1, 10,  1,  9,  1,  4,  2,  6,  3,  5, 10,  0, 10,  6,  0,  7,
+        7,  6,  7,  4,  4,  8,  9,  5,  5,  0, 10,  4,  3,  0,  2, 10,  1,
+       10,  4,  7,  1,  7,  0,  7,  0,  3, 10,  6,  7,  0,  3,  6,  3,  7,
+        3,  6,  8,  3,  6,  8,  6,  3,  9,  5,  0,  4,  9,  7,  0,  5,  7,
+        8,  8,  3,  5,  9, 10,  5,  6,  4,  6,  0,  9,  6,  7,  4]
+print('Tipo da variável: ',type(notas)) # Verifica o tipo original
+
+# Transforma a lista em Series
+notas = pd.Series(notas)
+print('Tipo da variável: ',type(notas)) # Verifica o tipo após a mudança
+print(notas) # Exibe a Series
+Tipo da variável:  <class 'list'>
+Tipo da variável:  <class 'pandas.core.series.Series'>
+0     1
+1     0
+2     6
+3     3
+4     6
+     ..
+95    0
+96    9
+97    6
+98    7
+99    4
+Length: 100, dtype: int64
+Exibindo as 5 primeiras e últimas notas
+
+# 5 primeiras notas
+notas.head(2)
+0
+0	1
+1	0
+
+dtype: int64
+# 5 últimas notas
+notas.tail(2)
+0
+98	7
+99	4
+
+dtype: int64
+Exibindo somente as notas "únicas" (sem repetições)
+
+notas.unique()
+array([ 1,  0,  6,  3,  4,  9,  5,  2, 10,  8,  7])
+Exibindo a quantidade de ocorrências de cada nota
+
+notas.value_counts()
+count
+6	13
+0	11
+3	11
+9	11
+4	11
+7	11
+10	9
+5	8
+1	6
+8	6
+2	3
+
+dtype: int64
+Não deixe de testar os outros métodos
+
+DataFrames
+Um DataFrame é a estrutura de dados bidimensional do Pandas, semelhante a uma tabela do Excel, com linhas e colunas. Cada coluna de um DataFrame é, na verdade, uma Series, o que permite trabalhar com diferentes tipos de dados (números, textos, datas, etc.) ao mesmo tempo. Essa estrutura é ideal para armazenar, organizar e analisar grandes conjuntos de dados, permitindo realizar operações como filtragem, agrupamento, cálculos estatísticos e muito mais de forma rápida e intuitiva.
+
+Principais métodos de um DataFrame:
+
+Método	Descrição
+head(n)	Mostra as primeiras n linhas do DataFrame.
+info()	Exibe informações sobre colunas, tipos de dados e valores nulos.
+describe()	Gera estatísticas descritivas (média, desvio padrão, etc.).
+shape	Retorna o número de linhas e colunas (tupla).
+columns	Mostra os nomes das colunas.
+dtypes	Mostra o tipo de dado de cada coluna.
+loc[]	Acessa linhas e colunas pelo nome.
+iloc[]	Acessa linhas e colunas pela posição.
+drop()	Remove colunas ou linhas.
+groupby()	Agrupa os dados com base em uma ou mais colunas.
+sort_values()	Ordena os dados por uma coluna específica.
+fillna()	Substitui valores nulos (NaN) por outro valor.
+merge()	Junta dois DataFrames (como em SQL JOIN).
+to_csv() / read_csv()	Exporta ou importa dados em formato CSV.
+Geralmente o objeto DataFrame é criado automáticamente quando importamos um conjunto de dados usando pd.read_excel() ou qualquer função do tipo, por exemplo.
+
+Mas neste momento vamos criar um DataFrame do zero para entender melhor como ele funciona
+
+dados = {
+    'nomes' : ['Joao', 'Maria', 'Fernanda', 'Pedro', 'Robson', 'Moacir', 'Alex', 'Lara'],
+    'notas' : [8,  9,  5,  5, 10,  4,  3, 2]
+    }
+
+
+df = pd.DataFrame(dados)
+df
+nomes	notas
+0	Joao	8
+1	Maria	9
+2	Fernanda	5
+3	Pedro	5
+4	Robson	10
+5	Moacir	4
+6	Alex	3
+7	Lara	2
+Para selecionar apenas uma colunas funciona de maneira semelhante à acessar uma chave de um dicionário. Porém com o detalhe que o objeto retornado é uma Series.
+
+# Selecionando apenas a coluna 'nomes'
+df['nomes']
+nomes
+0	Joao
+1	Maria
+2	Fernanda
+3	Pedro
+4	Robson
+5	Moacir
+6	Alex
+7	Lara
+
+dtype: object
+# selecionando apenas a coluna 'notas'
+df['notas']
+0     8
+1     9
+2     5
+3     5
+4    10
+5     4
+6     3
+7     2
+Name: notas, dtype: int64
+Descobrindo a média de todas as notas:
+
+df['notas'].mean()
+np.float64(5.75)
+Para filtrar um registro:
+
+# Isso gera uma Series de True/False (Bool)
+df['notas'] > 5 # Lista de Verdadeiros e Falsos
+0     True
+1     True
+2    False
+3    False
+4     True
+5    False
+6    False
+7    False
+Name: notas, dtype: bool
+Nós podemos transformar essa Series de volta em um Dataframe passando esta mesma linha de código no colchetes do DataFrame
+
+df[df['notas'] > 5] # Desta maneira podemos usar a lógica booleana para filtrar linhas em um DataFrame
+nomes	notas
+0	Joao	8
+1	Maria	9
+4	Robson	10
+Analizando um pouco melhor o DataFrame
+Com o DataFrame em mãos, podemos verificar algumas informações importantes sobre a quantidade de linhas e colunas, tipos de dados, tamanho em bytes ocupado na memória e etc utilizando o método df.info()
+
+df.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 8 entries, 0 to 7
+Data columns (total 2 columns):
+ #   Column  Non-Null Count  Dtype 
+---  ------  --------------  ----- 
+ 0   nomes   8 non-null      object
+ 1   notas   8 non-null      int64 
+dtypes: int64(1), object(1)
+memory usage: 260.0+ bytes
+Informações do DataFrame:
+
+Podemos ver o tipo da variável = 'pandas.core.frame.DataFrame'
+A quantidade de linhas do DataFrame (RangeIndex) = 8 entries, 0 to 7 (Significa que tem 8 linhas e o índice vai de 0 à 7)
+A quantidade de colunas (Data columns) = total 2 columns (Duas colunas)
+Em seguida vemos informações sobre as colunas:
+
+O nome (Column) = informa em ordem o nome das colunas
+Non-Null Count = informa a quantidade de registros 'não vazios' naquela coluna
+Dtype = Informa o tipo de dados contidos naquela coluna (object significa que é uma coluna de strings)
+Por últimos temos:
+
+dtypes = uma relação de todos os tipos de colunas
+memory usage = o espaço que o dataframe ocupa na memória ram enquanto o script python está sendo executado
+Exercícios
+1 - Importe 'pandas' como pd
+import pandas as pd
+2 - Transforme o dicionário abaixo em um DataFrame e exiba a tabela Dataframe
+funcionarios = {
+    "nome": [
+        "Ana Souza", "Bruno Lima", "Carla Ferreira", "Diego Santos", "Eduarda Nascimento",
+        "Felipe Almeida", "Giovana Ramos", "Henrique Costa", "Isabela Araujo", "João Pereira",
+        "Karina Oliveira", "Lucas Rodrigues", "Mariana Machado", "Nathan Silva", "Olívia Barbosa"
+    ],
+    "unidade": [
+        2, 1, 3, 2, 1,
+        3, 1, 2, 3, 1,
+        2, 3, 1, 3, 2
+    ],
+    "escala_noturna": [
+        False, True, False, True, False,
+        True, False, True, False, True,
+        False, True, False, True, False
+    ],
+    "vendas": [
+        18754.32, 24321.89, 19876.45, 27543.22, 15789.66,
+        29123.10, 22345.99, 26789.40, 19456.78, 28345.55,
+        17654.12, 23876.99, 20543.70, 29654.88, 18321.44
+    ]
+}
+
+
+df = pd.DataFrame(funcionarios)
+df
+ 
+nome	unidade	escala_noturna	vendas
+0	Ana Souza	2	False	18754.32
+1	Bruno Lima	1	True	24321.89
+2	Carla Ferreira	3	False	19876.45
+3	Diego Santos	2	True	27543.22
+4	Eduarda Nascimento	1	False	15789.66
+5	Felipe Almeida	3	True	29123.10
+6	Giovana Ramos	1	False	22345.99
+7	Henrique Costa	2	True	26789.40
+8	Isabela Araujo	3	False	19456.78
+9	João Pereira	1	True	28345.55
+10	Karina Oliveira	2	False	17654.12
+11	Lucas Rodrigues	3	True	23876.99
+12	Mariana Machado	1	False	20543.70
+13	Nathan Silva	3	True	29654.88
+14	Olívia Barbosa	2	False	18321.44
+# Não rode essa linha de código para não perder o resultado de exemplo
+nome	unidade	escala_noturna	vendas
+0	Ana Souza	2	False	18754.32
+1	Bruno Lima	1	True	24321.89
+2	Carla Ferreira	3	False	19876.45
+3	Diego Santos	2	True	27543.22
+4	Eduarda Nascimento	1	False	15789.66
+5	Felipe Almeida	3	True	29123.10
+6	Giovana Ramos	1	False	22345.99
+7	Henrique Costa	2	True	26789.40
+8	Isabela Araujo	3	False	19456.78
+9	João Pereira	1	True	28345.55
+10	Karina Oliveira	2	False	17654.12
+11	Lucas Rodrigues	3	True	23876.99
+12	Mariana Machado	1	False	20543.70
+13	Nathan Silva	3	True	29654.88
+14	Olívia Barbosa	2	False	18321.44
+3 - Exiba as informações de dimensões, linhas, colunas e tipos de dados do DataFrame
+df.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 15 entries, 0 to 14
+Data columns (total 4 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   nome            15 non-null     object 
+ 1   unidade         15 non-null     int64  
+ 2   escala_noturna  15 non-null     bool   
+ 3   vendas          15 non-null     float64
+dtypes: bool(1), float64(1), int64(1), object(1)
+memory usage: 507.0+ bytes
+# Não rode essa linha de código para não perder o resultado de exemplo
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 15 entries, 0 to 14
+Data columns (total 4 columns):
+ #   Column          Non-Null Count  Dtype  
+---  ------          --------------  -----  
+ 0   nome            15 non-null     object 
+ 1   unidade         15 non-null     int64  
+ 2   escala_noturna  15 non-null     bool   
+ 3   vendas          15 non-null     float64
+dtypes: bool(1), float64(1), int64(1), object(1)
+memory usage: 507.0+ bytes
+4 - Quantos funcionários temos em cada unidade? dica: utilize o método value_counts()
+Selection deleted
+df.unidade.value_counts()
+
+unidade
+2    5
+1    5
+3    5
+Name: count, dtype: int64
+# Não rode essa linha de código para não perder o resultado de exemplo
+unidade
+2    5
+1    5
+3    5
+Name: count, dtype: int64
+5 - Seguindo a mesma lógica do exercício anterior, quantos funcionários trabalham de noite ou de dia
+Selection deleted
+df.escala_noturna.value_counts()
+
+escala_noturna
+False    8
+True     7
+Name: count, dtype: int64
+# Não rode essa linha de código para não perder o resultado de exemplo
+escala_noturna
+False    8
+True     7
+Name: count, dtype: int64
+6 - Qual foi o total de vendas do funcionário chamado Henrique Costa? (utilize a filtragem para descobrir)
+Selection deleted
+#df.iloc[]
+df[df["nome"] == "Henrique Costa"]
+nome              Felipe Almeida
+unidade                        3
+escala_noturna              True
+vendas                   29123.1
+Name: 5, dtype: object
+# Não rode essa linha de código para não perder o resultado de exemplo
+nome	unidade	escala_noturna	vendas
+7	Henrique Costa	2	True	26789.4
+7 - Quais funcionários venderam menos do que R$20000 ?
+df[df['vendas']<20000 ]
+nome	unidade	escala_noturna	vendas
+0	Ana Souza	2	False	18754.32
+2	Carla Ferreira	3	False	19876.45
+4	Eduarda Nascimento	1	False	15789.66
+8	Isabela Araujo	3	False	19456.78
+10	Karina Oliveira	2	False	17654.12
+14	Olívia Barbosa	2	False	18321.44
+# Não rode essa linha de código para não perder o resultado de exemplo
+nome	unidade	escala_noturna	vendas
+0	Ana Souza	2	False	18754.32
+2	Carla Ferreira	3	False	19876.45
+4	Eduarda Nascimento	1	False	15789.66
+8	Isabela Araujo	3	False	19456.78
+10	Karina Oliveira	2	False	17654.12
+14	Olívia Barbosa	2	False	18321.44
+8 - (BONUS) O total de vendas é maior durante o dia ou noite? (Não se preocupe com o groupby por enquanto, apenas some as vendas para cada periodo)¶
+Selection deleted
+
+# noite = df[df['escala_noturna']==True]
+# dia = df[df['escala_noturna']==False]
+
+# dia['vendas'].sum()
+# noite['vendas'].sum()
+
+# true:
+df.groupby('escala_noturna')["vendas"].sum()
+escala_noturna
+False    152742.46
+True     189655.03
+Name: vendas, dtype: float64
+# Não rode essa linha de código para não perder o resultado de exemplo
+Vendas de noite: R$189655.03
+Vendas de dia: R$152742.46
