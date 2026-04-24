@@ -1,0 +1,188 @@
+Estudo de Caso - Compras de Ecommerce
+Neste exmplo, iremos explorar e analizar alguns dados falsos sobre algumas compras feitas pela Amazon!
+
+Importe pandas e leia o arquivo csv "Ecommerce Purchases" e configure-o para um DataFrame chamado ecom.
+
+import pandas as pd 
+# Para ler um arquivo csv usamos o método pd.read_csv()
+ecom = pd.read_csv("Ecommerce Purchases.csv")
+Verifique o "head" do DataFrame.
+
+ecom.head(3) # .head() mostra as 5 primeiro linhas por padrão, porém você pode definir uma quantidade dentro dos parênteses
+Address	Lot	AM or PM	Browser Info	Company	Credit Card	CC Exp Date	CC Security Code	CC Provider	Email	Job	IP Address	Language	Purchase Price
+0	16629 Pace Camp Apt. 448\nAlexisborough, NE 77...	46 in	PM	Opera/9.56.(X11; Linux x86_64; sl-SI) Presto/2...	Martinez-Herman	6011929061123406	02/20	900	JCB 16 digit	pdunlap@yahoo.com	Scientist, product/process development	149.146.147.205	el	98.14
+1	9374 Jasmine Spurs Suite 508\nSouth John, TN 8...	28 rn	PM	Opera/8.93.(Windows 98; Win 9x 4.90; en-US) Pr...	Fletcher, Richards and Whitaker	3337758169645356	11/18	561	Mastercard	anthony41@reed.com	Drilling engineer	15.160.41.51	fr	70.73
+2	Unit 0065 Box 5052\nDPO AP 27450	94 vE	PM	Mozilla/5.0 (compatible; MSIE 9.0; Windows NT ...	Simpson, Williams and Pham	675957666125	08/19	699	JCB 16 digit	amymiller@morales-harrison.com	Customer service manager	132.207.160.22	de	0.95
+Quantas linhas e colunas existem?
+
+ecom.shape # Exibe uma tupla com as quantidades (linhas, colunas)
+(10000, 14)
+ecom.info() # Mostra todas as informações gerais do DataFrame
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 10000 entries, 0 to 9999
+Data columns (total 14 columns):
+ #   Column            Non-Null Count  Dtype  
+---  ------            --------------  -----  
+ 0   Address           10000 non-null  object 
+ 1   Lot               10000 non-null  object 
+ 2   AM or PM          10000 non-null  object 
+ 3   Browser Info      10000 non-null  object 
+ 4   Company           10000 non-null  object 
+ 5   Credit Card       10000 non-null  int64  
+ 6   CC Exp Date       10000 non-null  object 
+ 7   CC Security Code  10000 non-null  int64  
+ 8   CC Provider       10000 non-null  object 
+ 9   Email             10000 non-null  object 
+ 10  Job               10000 non-null  object 
+ 11  IP Address        10000 non-null  object 
+ 12  Language          10000 non-null  object 
+ 13  Purchase Price    10000 non-null  float64
+dtypes: float64(1), int64(2), object(11)
+memory usage: 1.1+ MB
+Qual é o preço de compra médio?
+
+ # Aplica o método .mean() na coluna 'Purchase Price'
+ecom["Purchase Price"].mean()
+Quais foram os preços de compra mais altos e mais baixos?
+
+# Valor máximo na coluna 'Purchase Price'
+
+ecom["Purchase Price"].max()
+np.float64(99.99)
+# Valor mínimo na coluna 'Purchase Price'
+ecom["Purchase Price"].min()
+np.float64(0.0)
+Quantas pessoas têm Inglês 'en' como sua língua de escolha no site?
+
+Selection deleted
+ # ecom['Language'] == 'en' gera uma lista de True/False. 
+# True equivale à 1 e False equivale à 0, portanto podemos somar os valores 'True' desta coluna
+(ecom["Language"] == "en").value_counts()
+
+
+
+Language
+False    8902
+True     1098
+Name: count, dtype: int64
+ # Outra maneira de resolver seria verificando a contagem de cada idioma na coluna Language
+Quantas pessoas têm o cargo de "Advogado"?
+
+(ecom["Job"] == "Development worker, community").value_counts()
+Job
+False    9978
+True       22
+Name: count, dtype: int64
+Quantas pessoas fizeram a compra durante a AM e quantas pessoas fizeram a compra durante o PM?
+
+Selection deleted
+# Exemplo usando agrupamento com a função groupby()
+ecom.groupby('AM or PM')["AM or PM"].value_counts()
+AM or PM
+AM    4932
+PM    5068
+Name: count, dtype: int64
+
+Quais são os 5 títulos de trabalho mais comuns?
+
+Selection deleted
+# Neste caso, primeiro fazemos a contagem dos valores na coluna 'Job' e depois pegamos apenas os 5 primeiros.
+# .value_counts() já retorna a contagem ordenada do maior para o menor
+ecom.Job.value_counts().head(5)
+
+Job
+Interior and spatial designer        31
+Lawyer                               30
+Social researcher                    28
+Research officer, political party    27
+Designer, jewellery                  27
+Name: count, dtype: int64
+Alguém fez uma compra que veio do Lot: "90 WT", qual foi o preço de compra para esta transação?
+
+Selection deleted
+# 1 - Primeiro fazemos a comparação ecom['Lot'] == '90 WT'. Isso retorna uma Series com True na(s) linha(s) onde 'Lot' é '90 WT' e False na restante
+# 2 - Depois usamos essa Series como filtro, dentro do colchetes da própria variável ecom ecom[ecom['Lot'] == '90 WT'], 
+# assim transformando ela de volta em um DataFrame filtrado
+# 3 - Por último filtramos apenas a coluna 'Purchase Price' do DataFrame
+ecom[ecom['Lot'] == '90 WT']["Purchase Price"]
+
+513    75.1
+Name: Purchase Price, dtype: float64
+Qual é o email da pessoa com o seguinte número do cartão de crédito: 4926535242672853
+
+Selection deleted
+# Aqui podemos seguir a mesma lógica do exemplo anterior
+ecom[ecom['Credit Card'] == 4926535242672853]
+Address	Lot	AM or PM	Browser Info	Company	Credit Card	CC Exp Date	CC Security Code	CC Provider	Email	Job	IP Address	Language	Purchase Price
+1234	2470 Maria Manors Suite 185\nJoneshaven, MN 87251	82 UX	PM	Mozilla/5.0 (X11; Linux x86_64; rv:1.9.5.20) G...	Cole, King and Bowers	4926535242672853	09/21	188	American Express	bondellen@williams-garza.com	Planning and development surveyor	159.182.3.50	ru	77.88
+Quantas pessoas têm o American Express como seu fornecedor de cartão de crédito * e * fizeram uma compra acima de US $ 95?
+
+# Para combinar dois filtros utilizamos o símbolo '&' (que representa a mesma coisa que AND) no pandas
+ecom[(ecom["CC Provider"]=="American Express")& (ecom["Purchase Price"]> 95)]
+
+
+Address	Lot	AM or PM	Browser Info	Company	Credit Card	CC Exp Date	CC Security Code	CC Provider	Email	Job	IP Address	Language	Purchase Price
+9	3795 Dawson Extensions\nLake Tinafort, ID 88739	15 Ug	AM	Mozilla/5.0 (X11; Linux i686; rv:1.9.7.20) Gec...	Rivera, Buchanan and Ramirez	4396283918371	01/17	931	American Express	qcoleman@hunt-huerta.com	Forensic scientist	236.198.199.8	zh	95.63
+280	81060 Dustin Causeway Apt. 503\nPort Danielche...	80 zh	PM	Mozilla/5.0 (Windows NT 5.01) AppleWebKit/5362...	Clay PLC	377737470673585	10/17	349	American Express	hfarley@hicks.com	Ergonomist	134.52.148.32	de	99.13
+372	359 Stanley Coves\nSalasfort, SD 59457	75 Ub	PM	Opera/8.42.(X11; Linux x86_64; en-US) Presto/2...	Davis-Lawrence	371995567939253	02/26	1877	American Express	amberhull@jones.net	Training and development officer	198.98.34.250	pt	99.08
+677	4855 Peter Bridge\nJohnsonberg, PA 90599-0009	62 Nx	AM	Opera/9.49.(Windows 98; Win 9x 4.90; en-US) Pr...	Jones and Sons	4960556611626434	07/26	9255	American Express	evanskayla@fernandez.com	Plant breeder/geneticist	235.97.240.112	el	98.97
+766	386 Alisha Unions\nSteelebury, ND 19782	28 pJ	PM	Opera/8.47.(X11; Linux x86_64; sl-SI) Presto/2...	Proctor PLC	30325623350308	04/24	772	American Express	robertsonjulia@gmail.com	Therapist, art	146.208.30.83	es	96.66
+1225	916 Amanda Heights\nNew Johnland, CA 52112-8572	09 vg	PM	Mozilla/5.0 (X11; Linux i686; rv:1.9.7.20) Gec...	Clark, Ross and Travis	371229555854245	10/21	366	American Express	lawrencecarter@kelly.com	Artist	88.49.59.205	pt	96.55
+1381	79284 Lisa Mews Suite 069\nKellyborough, CT 71...	45 MR	PM	Mozilla/5.0 (Macintosh; PPC Mac OS X 10_5_5; r...	Randall-Cohen	4855262855037	05/17	518	American Express	maldonadomichael@martinez-delgado.info	Geophysical data processor	50.40.147.204	it	96.11
+1385	67796 James Keys Suite 656\nSouth Katieshire, ...	06 ia	PM	Mozilla/5.0 (Windows NT 5.1) AppleWebKit/5330 ...	Gonzalez, Gross and Allen	30407332938506	12/20	597	American Express	vbrown@daugherty.com	Geophysical data processor	152.133.246.191	zh	98.89
+1568	76108 Barker Manors\nEast Amy, PW 49544-5921	82 Qw	AM	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53...	Nguyen, Branch and Wiley	5142451859832464	04/21	785	American Express	johnsonjulie@yahoo.com	Insurance claims handler	175.248.232.126	es	97.04
+1727	478 Anita Hill Apt. 766\nAverymouth, FM 50629-...	94 qM	AM	Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53...	Owen and Sons	30242757909967	11/19	7403	American Express	sharpmelanie@smith-johnson.com	Psychologist, prison and probation services	126.47.196.22	ru	95.58
+2146	557 Barton Harbor\nFuentesport, VI 29961	96 MV	AM	Mozilla/5.0 (compatible; MSIE 6.0; Windows 98;...	Flores-Cook	3337255995040373	04/19	28	American Express	jessica94@mosley-buchanan.com	Armed forces technical officer	35.97.189.19	es	98.01
+2264	040 Ingram Way Suite 602\nEast Matthew, AR 67341	52 WA	AM	Mozilla/5.0 (Windows NT 6.0) AppleWebKit/5341 ...	Baker, Simmons and Pitts	3096946456575623	11/22	56	American Express	holtamanda@gmail.com	Archaeologist	185.14.106.115	es	99.85
+2267	216 Olivia Court Apt. 439\nTonyshire, IN 19159...	11 za	PM	Mozilla/5.0 (Macintosh; PPC Mac OS X 10_6_4; r...	Olson Inc	5388757330269354	02/17	738	American Express	burkestephanie@lee-cameron.com	Management consultant	20.140.16.225	it	97.63
+2642	899 Williams Prairie Suite 234\nEast Hunterbur...	46 hb	PM	Mozilla/5.0 (compatible; MSIE 7.0; Windows NT ...	Webb Inc	3096797127305092	05/17	418	American Express	reevesmanuel@gmail.com	Engineer, maintenance (IT)	169.132.152.152	el	96.08
+2828	20135 Miller Green Apt. 763\nGarciaville, KY 6...	79 El	PM	Mozilla/5.0 (Windows; U; Windows CE) AppleWebK...	Zavala, Cox and Parker	5173968976288215	11/22	125	American Express	villarrealdavid@gray.com	Chartered management accountant	76.75.229.58	el	96.12
+3291	58939 Reese Cove\nSouth Ross, MA 54531	50 cD	AM	Mozilla/5.0 (compatible; MSIE 9.0; Windows 95;...	Chang, Davis and Snyder	349464844934636	11/23	103	American Express	stephanieacosta@yahoo.com	IT trainer	124.247.101.106	it	95.94
+3349	1984 Christopher Turnpike Suite 904\nRichardbu...	30 xs	AM	Mozilla/5.0 (X11; Linux x86_64; rv:1.9.7.20) G...	Martin-Mitchell	3096398727024637	03/19	439	American Express	hgross@mccoy-mckay.info	Structural engineer	167.172.139.33	pt	95.46
+3619	03233 Angela Road Apt. 808\nEast Jilliantown, ...	41 nH	PM	Opera/9.53.(Windows 95; en-US) Presto/2.9.175 ...	Silva, Kim and Martinez	4807251488895729	10/21	948	American Express	jonesjesse@castro.info	Garment/textile technologist	87.66.16.4	en	99.69
+4071	8161 Craig Passage Apt. 939\nPort Emilystad, R...	45 ab	AM	Mozilla/5.0 (Windows; U; Windows NT 6.1) Apple...	Wilson-Robinson	5506767693718324	08/23	18	American Express	hhenderson@yahoo.com	Customer service manager	119.74.76.168	es	96.49
+4569	88284 Austin Summit Apt. 805\nKellerside, WY 6...	03 WL	AM	Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_5_5...	Fisher, Thompson and Lynch	3088726880694574	12/19	159	American Express	amy00@patton.com	Actuary	207.18.223.8	el	97.38
+5385	USNS Smith\nFPO AA 37829	80 BX	AM	Opera/9.56.(X11; Linux x86_64; en-US) Presto/2...	Patterson-Miller	4411786056713950	12/22	452	American Express	ijones@hotmail.com	Field seismologist	251.254.250.100	el	96.13
+5655	38674 Mckay Vista\nWilsonbury, MO 55611-8663	95 aB	PM	Mozilla/5.0 (X11; Linux i686) AppleWebKit/5331...	Watson-Bailey	3096820981608615	05/20	259	American Express	timothy84@hotmail.com	Production designer, theatre/television/film	235.149.102.129	es	98.28
+5692	PSC 8264, Box 8124\nAPO AE 19700	97 sG	PM	Mozilla/5.0 (iPod; U; CPU iPhone OS 3_3 like M...	Moore Inc	6011499701167585	10/20	845	American Express	kellypace@yahoo.com	Aid worker	155.121.60.58	pt	98.66
+5814	Unit 5232 Box 4650\nDPO AE 28335-7543	71 So	PM	Mozilla/5.0 (X11; Linux i686) AppleWebKit/5342...	Garcia LLC	30346960979608	07/17	402	American Express	jrice@gmail.com	Solicitor	165.48.161.188	zh	96.73
+5875	8256 Anderson Forest\nFordbury, PA 81027-8980	17 Oe	AM	Mozilla/5.0 (compatible; MSIE 9.0; Windows NT ...	Kelly, Peterson and Oliver	5173335726386576	02/18	954	American Express	hernandezandrea@yahoo.com	Community development worker	212.168.246.27	ru	95.07
+5895	87003 Jason Tunnel Apt. 216\nDariusville, MS 8...	72 gL	AM	Mozilla/5.0 (compatible; MSIE 9.0; Windows NT ...	Reyes, Fox and Wilson	180010957603245	09/24	929	American Express	duncanmichael@hotmail.com	Event organiser	231.34.199.32	it	97.38
+6026	Unit 4385 Box 1428\nDPO AE 04110	58 Ex	AM	Mozilla/5.0 (Windows; U; Windows NT 5.01) Appl...	White Inc	3112975578138572	09/17	7	American Express	scott35@yahoo.com	Operations geologist	217.6.202.138	en	95.89
+6524	344 Rivera Shore Apt. 224\nJoshuaborough, ND 3...	44 SM	AM	Opera/8.62.(X11; Linux i686; en-US) Presto/2.9...	Lawson, Moyer and Valencia	379348662534664	06/17	809	American Express	olsonjohn@hotmail.com	Teacher, primary school	45.1.104.55	zh	97.87
+7239	81561 Stein Rue\nEast Melissaport, MA 64959	45 sZ	PM	Mozilla/5.0 (X11; Linux i686) AppleWebKit/5310...	Smith Ltd	503825682670	07/19	852	American Express	beckerjennifer@gmail.com	Engineer, energy	50.107.135.203	fr	97.32
+7381	40804 Belinda Roads Apt. 186\nWest Nicoleberg,...	30 GH	AM	Opera/9.32.(Windows NT 4.0; it-IT) Presto/2.9....	Blair-Keith	180089858618619	05/19	2107	American Express	woodsmatthew@walton.org	Fashion designer	223.87.136.82	es	99.81
+7416	1082 Jason Alley Suite 707\nWhitestad, SC 97805	08 bm	PM	Mozilla/5.0 (Windows NT 5.1; sl-SI; rv:1.9.2.2...	Carroll, Harrison and Escobar	3088903707645291	12/18	220	American Express	gcruz@butler.com	Broadcast presenter	193.90.91.152	pt	96.09
+7514	678 David Manor Suite 323\nBobbymouth, PW 59942	91 NA	AM	Mozilla/5.0 (compatible; MSIE 8.0; Windows 98;...	Glenn, Lowe and Shah	676298897445	04/26	61	American Express	tammy75@cameron.com	Automotive engineer	37.241.180.247	ru	98.36
+8233	327 Hamilton Hollow\nEast Nicolechester, RI 65868	53 dE	PM	Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_5_3...	Keller, Carter and Garcia	30299608736429	08/22	786	American Express	elliskaren@taylor.com	Chemical engineer	131.34.220.138	en	98.63
+8381	274 Wallace Pine Apt. 189\nMartinberg, WY 7548...	32 rI	PM	Mozilla/5.0 (Windows; U; Windows 98; Win 9x 4....	Kelly-Newman	5527104423944290	05/18	711	American Express	joneswilliam@cox.net	Surveyor, land/geomatics	29.211.114.191	ru	99.36
+8408	Unit 4967 Box 4574\nDPO AP 11412	05 zs	PM	Mozilla/5.0 (compatible; MSIE 5.0; Windows 98;...	Acevedo-Smith	3337721305744244	01/19	738	American Express	nunezjames@hotmail.com	Designer, exhibition/display	91.55.254.144	es	98.16
+8434	474 Gonzalez Meadow Suite 581\nEast Vincent, M...	14 St	PM	Mozilla/5.0 (compatible; MSIE 6.0; Windows NT ...	Miller and Sons	180059754370698	07/24	812	American Express	vtaylor@hatfield.com	Armed forces technical officer	26.69.128.20	it	97.90
+8817	3658 Campos Lodge\nChambersfurt, MH 86260	24 ej	PM	Mozilla/5.0 (compatible; MSIE 5.0; Windows NT ...	Fisher-Jones	210046575239925	09/25	860	American Express	jessica35@hotmail.com	Forensic scientist	18.74.143.113	fr	99.16
+9168	18782 Hall Row Suite 810\nSouth Wesleyville, I...	15 QU	PM	Opera/9.57.(X11; Linux i686; it-IT) Presto/2.9...	Butler PLC	5412611065926441	05/25	49	American Express	tammyblair@yahoo.com	Computer games developer	2.84.51.133	en	98.59
+9856	058 Miranda Locks Suite 792\nPort Davidstad, P...	73 IW	PM	Mozilla/5.0 (Windows NT 5.0) AppleWebKit/5360 ...	Olson-Navarro	6011037226242937	03/18	757	American Express	brendastewart@dalton.info	Site engineer	96.79.250.154	de	99.97
+Difícil: quantas pessoas tem um cartão de crédito que expira em 2025?
+
+sum(ecom['CC Exp Date'].apply(lambda x: x[-2:] == '25'))
+A função apply() no Pandas é usada para aplicar uma função a cada elemento de uma coluna (ou linha) de um DataFrame ou Series. Já a função lambda é uma forma de criar funções anônimas, ou seja, funções rápidas e sem nome. No exemplo ecom['CC Exp Date'].apply(lambda x: x[-2:] == '25'), o apply() aplica a função lambda a cada valor da coluna 'CC Exp Date', verificando se os dois últimos caracteres (geralmente o ano de validade do cartão) são '25'. O sum() no início soma quantos desses valores retornaram True, ou seja, quantos cartões expiram em 2025.
+
+Difícil: quais são os 5 principais provedores de e-mail / hosts mais populares (por exemplo, gmail.com, yahoo.com, etc ...)
+
+ecom['Email'].apply(lambda x: x.split('@')[-1]).value_counts().head()
+O código acima faz o seguinte:
+
+1 - apply(lambda x: x.split('@')[-1]) → para cada e-mail na coluna 'Email', a função lambda separa o texto no caractere '@' e pega a parte depois dele (ou seja, o domínio do e-mail, como gmail.com, yahoo.com etc.).
+
+2 - value_counts() → conta quantas vezes cada domínio aparece.
+
+3 - head() → exibe apenas os 5 primeiros resultados (os provedores mais populares).
+
+Click to add a cell.
+
+Simple
+3
+Python 3 (ipykernel) | Idle
+Mode: Command
+Ln 1, Col 1
+pandas_02_estudo_de_caso.ipynb
+1
