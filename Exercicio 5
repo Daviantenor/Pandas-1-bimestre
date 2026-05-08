@@ -1,0 +1,6 @@
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df, x="preco", y="faturamento", hue="categoria")
+plt.title("Preço  e faturamento")
+plt.xlabel("Preço")
+plt.ylabel("Faturamento")
+plt.show()
