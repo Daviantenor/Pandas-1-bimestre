@@ -1,0 +1,10 @@
+import matplotlib.pyplot as plt
+
+
+plt.figure(figsize=(5,6))
+plt.bar(["Casino Royale","Quantum of Solace"],[596.4,591.7],color=["red","black"])
+plt.title("Faturamento dos Filmes do 007")
+plt.xlabel("Nome dos Filmes")
+plt.ylabel("Faturamento dos Filmes")
+plt.show()
+
