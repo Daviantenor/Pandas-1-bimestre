@@ -1,0 +1,7 @@
+plt.figure(figsize=(8, 5))
+sns.histplot(data=df, x="quantidade", bins=8)
+plt.title("Distribuição dos preços")
+plt.xlabel("Quantidade")
+plt.ylabel("Frequencia")
+plt.show()
+df
