@@ -1,0 +1,3 @@
+faturamento_por_produto=df.groupby("produto")["faturamento"].sum().sort_values(ascending=False)
+
+faturamento_por_produto
