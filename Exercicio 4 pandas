@@ -1,0 +1,6 @@
+plt.figure(figsize=(5, 5))
+sns.boxplot(data=df, x="categoria", y="faturamento")
+plt.title("faturamento por categoria")
+plt.xlabel("categoria")
+plt.ylabel("faturamento")
+plt.show()
