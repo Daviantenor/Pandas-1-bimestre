@@ -11,3 +11,6 @@ faturamento_por_produto
 plt.figure(figsize=(9,6))
 plt.bar(faturamento_por_produto.index,faturamento_por_produto.values)
 plt.show()
+
+
+
