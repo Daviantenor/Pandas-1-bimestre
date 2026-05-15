@@ -1,0 +1,5 @@
+novo_indice=["Janeiro","Fevereiro","Março","Abril"]
+faturamento_mes=df.groupby("mes")["faturamento"].sum().reindex(novo_indice)
+plt.figure(figsize=(6,6))
+plt.bar(faturamento_mes.index, faturamento_mes.values,color=["red","blue","green","yellow"])
+plt.show()
