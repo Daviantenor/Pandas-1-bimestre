@@ -6,3 +6,13 @@ plt.title("Faturamento total por categoria")
 plt.xlabel("produto")
 plt.ylabel("Faturamento")
 plt.show()
+
+
+
+
+faturamento_por_produto=df.groupby("produto")["faturamento"].sum().sort_values(ascending=False)
+
+faturamento_por_produto
+plt.figure(figsize=(9,6))
+plt.bar(faturamento_por_produto.index,faturamento_por_produto.values,color=["gray","red"])
+plt.show()
