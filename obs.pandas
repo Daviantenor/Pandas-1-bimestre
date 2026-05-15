@@ -1,0 +1,4 @@
+plt.figure(figsize=(8, 5))
+plt.plot(["20 min","15 min","10 min","5 min"],[14,14.75,18,17],color="green")
+plt.grid(True)
+plt.show()
