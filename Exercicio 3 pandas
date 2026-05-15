@@ -5,3 +5,13 @@ plt.xlabel("Quantidade")
 plt.ylabel("Frequencia")
 plt.show()
 df
+
+Exercicio 3 2.0
+
+plt.figure(figsize=(8, 5))
+sns.histplot(data=df, x="quantidade", bins=8,edgecolor="purple",color="blue")
+plt.title("Distribuição dos preços")
+plt.xlabel("Quantidade")
+plt.ylabel("Frequencia")
+plt.show()
+df
