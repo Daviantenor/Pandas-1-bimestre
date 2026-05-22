@@ -1,0 +1,6 @@
+import sqlite3
+
+con=sqlite3.Connection("Banco_Artistas.bd")
+
+df.to_parquet('Dados_Artistas.parquet', index=False)
+df.to_sql("Banco_Artistaas",con)
