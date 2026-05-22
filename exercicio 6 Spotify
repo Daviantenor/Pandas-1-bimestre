@@ -1,0 +1,1 @@
+df.groupby("Artist")["Stream"].sum().sort_values(ascending=False).head()
