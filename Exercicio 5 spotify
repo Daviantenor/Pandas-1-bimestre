@@ -1,0 +1,6 @@
+
+import matplotlib.pyplot as plt
+
+top5views = df.sort_values(by="Views",ascending=False).head(7)
+plt.figure(figsize=(15,5))
+plt.bar(top5views["Track"],top5views["Views"],color="blue")
