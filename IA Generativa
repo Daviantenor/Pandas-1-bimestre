@@ -1,0 +1,281 @@
+1 !pip install google-genai
+
+2 import os
+import getpass
+
+os.environ["GEMINI_API_KEY"] = getpass.getpass("Cole sua GEMINI_API_KEY: ")
+
+3 from google import genai
+
+cliente = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+
+
+4 MODELO = "gemini-2.5-flash-lite"
+
+
+5  resposta = cliente.models.generate_content(
+    model=MODELO,
+    contents="se lembra do meu nome?"
+)
+
+print(resposta.text)
+
+
+
+6  def perguntar_ao_gemini(pergunta: str) -> str:
+    """
+    Envia uma pergunta para o Gemini e retorna a resposta em texto.
+    """
+
+    resposta = cliente.models.generate_content(
+        model=MODELO,
+        contents=pergunta
+    )
+
+    return resposta.text
+resposta = perguntar_ao_gemini("Me dê 3 exemplos de uso de IA no dia a dia.")
+print(resposta)
+
+
+7  INSTRUCAO_SISTEMA = """
+Voçê é um professor do senai,explique qualquer conteúdo relacionado ao tema.
+"""
+
+resposta = cliente.models.generate_content(
+    model=MODELO,
+    contents="Você comemora o dia dos pais?",
+    config={
+        "system_instruction": INSTRUCAO_SISTEMA
+    }
+)
+
+print(resposta.text)
+
+
+8   pergunta = " Me explique o que é filosofia."
+
+resposta = cliente.models.generate_content(
+    model=MODELO,
+    contents=pergunta,
+    config={
+        "temperature": 0.2, 
+        "system_instruction": INSTRUCAO_SISTEMA
+    }
+)
+
+print(resposta.text)
+
+
+
+
+9   pergunta = " Me explique o que é filosofia."
+
+resposta = cliente.models.generate_content(
+    model=MODELO,
+    contents=pergunta,
+    config={
+        "temperature": 0.2, 
+        "system_instruction": INSTRUCAO_SISTEMA
+    }
+)
+
+print(resposta.text)
+
+
+
+10  historico = []
+
+def conversar(mensagem_usuario: str) -> str:
+    """
+    Envia uma mensagem para o Gemini usando o histórico da conversa.
+    """
+
+    historico.append({
+        "role": "user",
+        "parts": [{"text": mensagem_usuario}]
+    })
+
+    resposta = cliente.models.generate_content(
+        model=MODELO,
+        contents=historico,
+        config={
+            "system_instruction": INSTRUCAO_SISTEMA,
+            "temperature": 0.9
+        }
+    )
+
+    texto_resposta = resposta.text
+
+    historico.append({
+        "role": "model",
+        "parts": [{"text": texto_resposta}]
+    })
+
+    return texto_resposta  
+print(conversar("Me explique sobre o que é banco de dados."))
+
+
+11  historico.clear()
+print("Histórico limpo!") 
+
+12  prompt = """
+Crie um plano de estudos simples sobre Python básico.
+
+Responda somente em JSON válido, seguindo este formato:
+{
+  "tema": "",
+  "duracao_dias": 0,
+  "topicos": [],
+  "projeto_final": ""
+}
+"""
+
+resposta = cliente.models.generate_content(
+    model=MODELO,
+    contents=prompt,
+    config={
+        "temperature": 0.2,
+        "system_instruction": "Você responde somente em JSON válido, sem texto antes ou depois."
+    }
+)
+
+print(resposta.text)
+
+
+14  def gerar_exercicios(tema: str) -> str:
+    prompt = f"""
+    Crie 5 exercícios sobre o tema: {tema}.
+
+    Para cada exercício, informe:
+    - enunciado;
+    - nível de dificuldade;
+    - resposta esperada.
+
+    Responda em português do Brasil.
+    """
+
+    resposta = cliente.models.generate_content(
+        model=MODELO,
+        contents=prompt,
+        config={
+            "system_instruction": INSTRUCAO_SISTEMA,
+            "temperature": 0.4
+        }
+    )
+
+    return resposta.text
+print(gerar_exercicios("listas em Python"))
+
+
+
+
+extra 
+
+!pip -q install google-genai gradio 
+
+import os
+import getpass
+os.environ["GEMINI_API_KEY"] = getpass.getpass("Cole sua GEMINI_API_KEY: ") 
+
+
+
+
+
+import os
+import getpass
+from google import genai
+from google.genai import types
+
+cliente = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+#LANGCHAIN -> comentário
+MODELO = "gemini-2.5-flash-lite"
+SYSTEM_INSTRUCTION ="""
+Você é um professor de tecnologia, responda direto ao ponto e dê exemplos.
+"""
+
+def converter_historico_para_gemini(historico, mensagem_usuario):
+    conteudo = []
+
+    if historico is None:
+        historico = []
+
+    for item in historico:
+        role = item["role"]
+        texto = item["content"]
+
+        if role == "user":
+            role_gemini = "user"
+        elif role == "assistant":
+            role_gemini = "model"
+        else:
+            continue
+
+        conteudo.append(
+            types.Content(
+                role=role_gemini,
+                parts=[types.Part.from_text(text=texto[0].get("text"))]
+            )
+        )
+
+    conteudo.append(
+        types.Content(
+            role="user",
+            parts=[types.Part.from_text(text=mensagem_usuario)]
+        )
+    )
+
+    return conteudo
+
+
+def chat_com_historico(mensagem_usuario, historico):
+    conteudo = converter_historico_para_gemini(historico, mensagem_usuario)
+
+    resposta = cliente.models.generate_content(
+        model=MODELO,
+        contents=conteudo,
+        config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_INSTRUCTION,
+            temperature=0.4,
+        ),
+    )
+
+    return resposta.text
+
+
+
+
+
+
+import gradio as gr
+
+with gr.Blocks(title="Super Chatbot Módulo 3") as demo:
+    gr.Markdown("## Chatbot com histórico!")
+
+    # Não coloque type="messages" nessa versão local
+    chat = gr.Chatbot(height=500)
+
+    msg = gr.Textbox(
+        placeholder="Digite sua pergunta: ",
+        show_label=False
+    )
+
+    clear = gr.Button("Limpar")
+
+    def responder(mensagem_usuario, historico):
+        if historico is None:
+            historico = []
+
+        resp = chat_com_historico(mensagem_usuario, historico)
+
+        historico = historico + [
+            {"role": "user", "content": mensagem_usuario},
+            {"role": "assistant", "content": resp}
+        ]
+
+        return "", historico
+
+    msg.submit(responder, [msg, chat], [msg, chat])
+    clear.click(lambda: [], None, chat)
+
+demo.launch()
+    
