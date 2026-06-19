@@ -1,0 +1,32 @@
+QUERY:
+SELECT * FROM crime_scene WHERE location = 'West Hollywood Records';
+RESULTADO:
+id	date	type	location	description
+65	19830715	furto	West Hollywood Records	Um disco de vinil valioso foi roubado da loja durante uma noite movimentada.
+
+QUERY:
+SELECT * FROM witnesses WHERE crime_scene_id = 65;
+RESULTADO:
+id	crime_scene_id	clue
+28	65	Vi um homem usando uma bandana vermelha saindo apressado da loja.
+75	65	O que mais lembro é que ele tinha um relógio de ouro distinto no pulso.
+
+QUERY:
+SELECT * FROM suspects WHERE bandana_color = "vermelha" AND accessory = "relógio de ouro";
+RESULTADO:
+id	name	bandana_color	accessory
+35	Tony Ramirez	vermelha	relógio de ouro
+44	Mickey Rivera	vermelha	relógio de ouro
+97	Rico Delgado	vermelha	relógio de ouro
+
+QUERY:
+SELECT * FROM interviews WHERE suspect_id IN (35,44,97);
+RESULTADO:
+Resultados
+suspect_id	transcript
+35	Eu não estava nem perto da West Hollywood Records naquela noite.
+44	Eu estava ocupado com minha carreira musical; não tenho nada a ver com esse furto.
+97	Eu não resisti. Perdi a cabeça e peguei o disco.
+
+CULPADO:
+97	Rico Delgado	vermelha	relógio de ouro
