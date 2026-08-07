@@ -1,0 +1,6 @@
+ IA Generativa- Cria coisas novas
+ia tradicional- analisa padroes e preve um valor
+
+Aprendizado supervisionado:ocorre com supervisão,procura um padrão , com dados rotulados
+Aprendizado Não supervisionado:aprende com base em padrões,sem dados rotulados.
+Aprendizado por reforço:aprende por repetição,até conseguir.
