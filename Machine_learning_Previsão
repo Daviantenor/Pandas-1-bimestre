@@ -1,0 +1,30 @@
+#%pip install scikit-learn
+
+
+#importar a biblioteca 
+
+from sklearn.linear_model import LinearRegression
+
+#Investimento em marketing dos últimos 6 meses 
+investimento =[[500],[1000],[1000],[1550],[2200],[1500]]
+
+#Valor total das vendas no mesmo período , 6  meses
+vendas =[2000,3350,3500,3800,5000,3000]
+
+# Criar o modelo de "Regressão Linear"
+
+modelo = LinearRegression()
+
+# Treinar o modelo
+modelo.fit(investimento,vendas)
+
+# Fazer uma previsão 
+novoInvestimento = float(input("Valor Investimento: "))
+novoInvestimento = [[novoInvestimento]]
+previsao = modelo.predict(novoInvestimento)
+
+#Resposta 
+print(f'''investindo: R$ {novoInvestimento}reais.
+            Previsão de vendas: R$ {previsao}reais.
+''')
+#Data Driven#
