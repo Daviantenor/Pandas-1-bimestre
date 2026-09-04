@@ -27,4 +27,4 @@ previsao = modelo.predict(novoInvestimento)
 print(f'''investindo: R$ {novoInvestimento}reais.
             Previsão de vendas: R$ {previsao}reais.
 ''')
-#Data Driven#
+#Data Driven#(presta atenção ,é importante.)
