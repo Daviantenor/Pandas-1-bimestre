@@ -1,0 +1,14 @@
+from sklearn.linear_model import LinearRegression
+
+tempo_bicicleta= [[10],[15],[20],[25],[30],[35],[40],[50],[55],[60]]
+
+
+
+preco_bicicleta = [10,13,14,18,19,23,24,30,32,34]
+
+modelo = LinearRegression()
+modelo.fit(tempo_bicicleta, preco_bicicleta)
+
+previsao = modelo.predict([[60]])
+
+print(previsao)
