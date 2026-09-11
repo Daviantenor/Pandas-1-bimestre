@@ -1,0 +1,35 @@
+%pip install scikit-learn
+#venv:por algum problema de instalação utilize.
+
+--------------------------------
+Notas
+
+from sklearn.linear_model import LinearRegression
+# X(Atributos) - Valores que são usados para fazer a previsão
+horas_estudo = [[1],[2],[3],[4],[5]]
+
+#Y (Alvo - Target)-Valores que queremos prever
+
+nota = [10,20,40,50,65]
+
+modelo = LinearRegression()# Cria o modelo de Regressão Linear;
+modelo.fit(horas_estudo, nota)# Treinando o modelo .fit(X,Y);
+
+previsao = modelo.predict([[4]])
+
+print(previsao)
+----------------------------
+
+Marketing 
+
+from sklearn.linear_model import LinearRegression
+
+orcamento_marketing = [[750],[1000],[2200],[2600]]
+
+vendas = [4000,6500,7000,8000]
+
+modelo = LinearRegression()
+modelo.fit(orcamento_marketing, vendas)
+
+previsao = modelo.predict([[]])
+print(previsao)
